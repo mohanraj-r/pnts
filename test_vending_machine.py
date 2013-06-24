@@ -15,6 +15,7 @@ class TestVendingMachine(unittest.TestCase):
     Tests for the vending machine.
     
     TODO:
+    * Check out code coverage
     * Figure out a way to generate repetitive tests (e.g. invalid input) 
         - either using nose (which I already have experience in)
         - or unittest (ref: http://stackoverflow.com/questions/32899/how-to-generate-dynamic-parametrized-unit-tests-in-python)
