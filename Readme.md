@@ -2,7 +2,7 @@ Use `pip install -r requirements.txt` to install dependent packages:
 * nose
 * coverage
 
-Nose
+Running the tests
 -----
 Tests can be executed by running the test script.
 ```
