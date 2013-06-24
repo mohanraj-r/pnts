@@ -30,14 +30,15 @@ def _get_cost_of_pop(pop):
 
 
 def _invalid_input(test_data):
-#     invalid_input.description = None
     try:
         vend_pop(**test_data['inputs'])
     except test_data['error'] as exception:
-        pass
+        expected_error_msg = test_data.get('error_msg')
+        if expected_error_msg:
+            assert expected_error_msg in str(exception), 'Expected error message "{}" not found in exception {}'.format(expected_error_msg, exception)
     else:
-        assert test_data['assert_msg']            
-
+        assert False, test_data['assert_msg']            
+        
 
 class TestVendingMachine(object):
     '''
@@ -69,7 +70,7 @@ class TestVendingMachine(object):
                                                                              'money_amount_paid': 1,
                                                                              },
                                                                   'error': ValueError,
-                                                                  'error_msg': None,
+                                                                  'error_msg': 'Invalid selection',
                                                                   'assert_msg': 'Vending pop with a random string did not give expected error.'
                                                                   }
                                     }
@@ -99,7 +100,7 @@ class TestVendingMachine(object):
         except ValueError:
             pass
         else:
-            assert 'Vending pop with no money did not give expected error.'
+            assert False, 'Vending pop with no money did not give expected error.'
 
 
     def test_insufficient_amount(self):
@@ -112,7 +113,7 @@ class TestVendingMachine(object):
         except ValueError:
             pass
         else:
-            assert 'Trying to purchase {} that costs {} with an insufficient amount of {} did not give expected error.'.format(pop, cost, test_amount)
+            assert False, 'Trying to purchase {} that costs {} with an insufficient amount of {} did not give expected error.'.format(pop, cost, test_amount)
 
 
     def test_change_returned(self):
