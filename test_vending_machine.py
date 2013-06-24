@@ -12,9 +12,14 @@ from vending_machine import vend_pop
 
 class Test(unittest.TestCase):
     
-    def _generate_random_string(self, chars=string.letters, length=10):
-        random_string = ''.join([chars[random.randint(1, len(chars))] for _ in range(length)])
+    @staticmethod
+    def _generate_random_string(chars=string.letters, length=10):
+        ''' Generate a random string with given chars and of given length. '''
+        chars_len = len(chars) - 1
+        random_string = ''.join([chars[random.randint(0, chars_len)] 
+                                 for _ in range(length)])
         return random_string
+
 
     def setUp(self):
         pass
