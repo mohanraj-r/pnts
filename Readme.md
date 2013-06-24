@@ -1,28 +1,20 @@
-Use `pip install -r requirements.txt` to use code coverage.
-
-This will install the required packages of 
+Use `pip install -r requirements.txt` to install dependent packages:
 * nose
 * coverage
 
 Nose
 -----
-Tests can be executed using the nose test runner.
+Tests can be executed by running the test script.
 ```
-nosetests
+python test_vending_machine.py 
 ```
 
 
 Code Coverage
 -------------
 Code coverage stats is obtained using the `coverage` module. 
+They are generated automatically every time the tests are run.
 
-To obtain code coverage run 
-
-```
-coverage run --omit test_vending_machine.py test_vending_machine.py 
-coverage html
-```
-
-HTML report can be found in `htmlcov/index.html`
+HTML report can be found in `cover/index.html`
 
 Current code coverage is `100%`

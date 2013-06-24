@@ -5,6 +5,7 @@ Created on Jun 23, 2013
 '''
 import random
 import string
+import sys
 
 import nose
 
@@ -41,17 +42,19 @@ def _invalid_input(test_data):
         
 
 class TestVendingMachine(object):
-    '''
-    Tests for the vending machine.
-    
-    TODO:
-    * Figure out a way to generate repetitive tests (e.g. invalid input) 
-        - either using nose (which I already have experience in)
-        - or unittest (ref: http://stackoverflow.com/questions/32899/how-to-generate-dynamic-parametrized-unit-tests-in-python)
-    '''
+    ''' Tests for the vending machine. '''
     
     def __init__(self):
+        # data structure from which tests will be generated 
         self.invalid_input_tests = {
+                                    'no_input': {
+                                                 'test_name': 'Test without giving any input. The program takes non-optional arguments and hence should fail.',
+                                                 'inputs': {},
+                                                 'error': TypeError,
+                                                 'error_msg': None,
+                                                 'assert_msg': 'Vending pop without input did not give expected error.',
+                                                 },
+                                    
                                     'null_input': {
                                                     'test_name': 'Test with Null inputs.',
                                                     'inputs': {
@@ -63,16 +66,38 @@ class TestVendingMachine(object):
                                                     'assert_msg': 'Vending pop with null inputs did not give expected error.',
                                                     },
                                     
-                                    'non_existing_pop_selection':{
-                                                                  'test_name': 'Test by asking for a non-existing pop selection.',
-                                                                  'inputs': {
-                                                                             'pop_selection': _get_random_string(),
-                                                                             'money_amount_paid': 1,
-                                                                             },
-                                                                  'error': ValueError,
-                                                                  'error_msg': 'Invalid selection',
-                                                                  'assert_msg': 'Vending pop with a random string did not give expected error.'
-                                                                  }
+                                    'non_existing_pop_selection': {
+                                                                   'test_name': 'Test by asking for a non-existing pop selection.',
+                                                                   'inputs': {
+                                                                              'pop_selection': _get_random_string(),
+                                                                              'money_amount_paid': 1,
+                                                                              },
+                                                                   'error': ValueError,
+                                                                   'error_msg': 'Invalid selection',
+                                                                   'assert_msg': 'Vending pop with a non-existing selection did not give expected error.'
+                                                                   },
+                                    'zero_amount_paid': {
+                                                         'test_name': 'Test with zero amount paid for a valid pop selection.',
+                                                         'inputs': {
+                                                                    'pop_selection': _get_valid_random_pop(),
+                                                                    'money_amount_paid': 0,
+                                                                    },
+                                                         'error': ValueError,
+                                                         'error_msg': 'Please insert coins',
+                                                         'assert_msg': 'Vending pop with no money did not give expected error.'
+                                                         },
+                                    
+                                    'negative_amount_paid': {
+                                                             'test_name': 'Test with negative amount paid for a valid pop selection.',
+                                                             'inputs': {
+                                                                        'pop_selection': _get_valid_random_pop(),
+                                                                        'money_amount_paid': -1,
+                                                                        },
+                                                             'error': ValueError,
+                                                             'error_msg': 'Please insert coins',
+                                                             'assert_msg': 'Vending pop with negative money did not give expected error.'
+                                                             },
+                                    
                                     }
         
 
@@ -83,26 +108,6 @@ class TestVendingMachine(object):
             yield _invalid_input, test_data
 
 
-    def test_invalid_input_no_input(self):
-        ''' Test without giving any input. The program takes non-optional arguments and hence should fail. '''
-        try:
-            vend_pop()
-        except TypeError:
-            pass
-        else:
-            assert 'Vending pop without input did not give expected error.'
-   
-
-    def test_invalid_input_zero_amount_paid(self):
-        ''' Test with zero amount paid. '''
-        try:
-            vend_pop(pop_selection=_get_valid_random_pop(), money_amount_paid=0)
-        except ValueError:
-            pass
-        else:
-            assert False, 'Vending pop with no money did not give expected error.'
-
-
     def test_insufficient_amount(self):
         ''' Test by trying to get a pop with insufficient amount. '''
         pop = _get_valid_random_pop()
@@ -110,8 +115,8 @@ class TestVendingMachine(object):
         test_amount = cost - 1 
         try:
             vend_pop(pop_selection=pop, money_amount_paid=test_amount)
-        except ValueError:
-            pass
+        except ValueError as exception:
+            assert 'Not enough coins' in str(exception), 'Expected error message not in exception.'
         else:
             assert False, 'Trying to purchase {} that costs {} with an insufficient amount of {} did not give expected error.'.format(pop, cost, test_amount)
 
@@ -127,4 +132,6 @@ class TestVendingMachine(object):
                 
 
 if __name__ == "__main__":
-    nose.main()
+    argv = sys.argv[:]
+    argv.extend(['--verbose', '--with-coverage', '--cover-html', '--cover-package={}'.format('vending_machine')])    
+    nose.main(argv=argv)
