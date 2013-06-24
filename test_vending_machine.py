@@ -101,13 +101,8 @@ class TestVendingMachine(unittest.TestCase):
         cost = self._get_cost_of_pop(pop)
         test_amount = cost + 1
         expected_change = test_amount - cost
-        try:
-            change_returned = vend_pop(pop_selection=pop, money_amount_paid=test_amount)
-        except ValueError:
-            pass
-        else:
-            assert change_returned == expected_change, 'Trying to purchase {} that costs {} with a amount of {} returned a change of {} instead of the expected change of {}'.format(pop, cost, test_amount, change_returned, expected_change)
-        
+        change_returned = vend_pop(pop_selection=pop, money_amount_paid=test_amount)
+        assert change_returned == expected_change, 'Trying to purchase {} that costs {} with a amount of {} returned a change of {} instead of the expected change of {}'.format(pop, cost, test_amount, change_returned, expected_change)        
                 
 
 if __name__ == "__main__":
