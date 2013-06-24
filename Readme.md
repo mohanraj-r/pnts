@@ -1,5 +1,17 @@
 Use `pip install -r requirements.txt` to use code coverage.
 
+This will install the required packages of 
+* nose
+* coverage
+
+Nose
+-----
+Tests can be executed using the nose test runner.
+```
+nosetests
+```
+
+
 Code Coverage
 -------------
 Code coverage stats is obtained using the `coverage` module. 
